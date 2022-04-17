@@ -1,0 +1,16 @@
+create database store;
+use store;
+create table countries (code int primary key, name varchar(20) not null, continent_name varchar (20) unique);
+create table users (id int primary key, full_name varchar(20), email varchar(20) unique, gender char(1) check(gender='f' or gender='m'), date_of_birth varchar(15), created_at datetime, country_code int, foreign key (country_code) references countries(code));
+create table orders (id int primary key, userid int, foreign key (userid) references users(id), status varchar(6) check(status='start' or status='finish'), created_at datetime);
+create table products (id int primary key , name varchar(10), price int, status varchar(10) check(status='valid' or status='expired'), created_at datetime);
+create table order_products (order_id int, foreign key (order_id) references orders(id), products_id int, foreign key (products_id) references products(id) on delete cascade, constraint pk_order_product primary key (order_id, products_id), quantity int default 0);
+
+insert into countries (code, name, continent_name) values (1, 'saudi Arabia','Asia');
+insert into users (id, full_name, email, gender, date_of_birth, created_at, country_code) values (217, 'fatima_alramadan', 'email@example.com','f','1998-09-06', '2022-04-17 13:06:40', 1);
+insert into orders (id, userid, status, created_at) values (1234, 217, 'start', '2022-04-17 13:14:10');
+insert into products (id, name, price, status, created_at) values (5678, 'shampoo', 16, 'valid', '2022-04-17 13:18:20'); 
+insert into order_products (order_id, products_id, quantity) values(1234, 5678, 4);
+
+update countries set continent_name='ASIA' where code=1;
+delete from products where id=5678;
